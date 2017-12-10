@@ -4,7 +4,7 @@ your models go here
 
 example:
 
-from model import Model
+from model import InstantModel
 
 class User(Model):
 
@@ -14,5 +14,4 @@ class User(Model):
     age = 0
 
 """
-
 

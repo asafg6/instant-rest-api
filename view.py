@@ -25,6 +25,7 @@ class ViewResource(object):
         self._model = model
 
     def on_get(self, req, resp):
+        self._add_cors(resp)
         try:
             object_id = req.get_param('id')
             if object_id and len(req.params) == 1:  # only get by id
@@ -65,6 +66,7 @@ class ViewResource(object):
                 resp.media = standard_response(status='ERROR', message='Unexpected error occurred')
 
     def on_post(self, req, resp):
+        self._add_cors(resp)
         try:
             if len(req.params) > 0:
                 resp.status = falcon.HTTP_400
@@ -82,6 +84,7 @@ class ViewResource(object):
                 resp.media = standard_response(status='ERROR', message='Unexpected error occurred')
 
     def on_put(self, req, resp):
+        self._add_cors(resp)
         try:
             object_id = req.get_param('id', required=True)
             self._model.update(object_id, **req.media)
@@ -103,6 +106,7 @@ class ViewResource(object):
                 resp.media = standard_response(status='ERROR', message='Unexpected error occurred')
 
     def on_delete(self, req, resp):
+        self._add_cors(resp)
         try:
             object_id = req.get_param('id', required=True)
             # we allow deletion of a few ids
@@ -124,5 +128,13 @@ class ViewResource(object):
                 resp.status = falcon.HTTP_500
                 resp.media = standard_response(status='ERROR', message='Unexpected error occurred')
 
+    def on_options(self, req, resp):
+        self._add_cors(resp)
+        resp.set_header('allow', ' DELETE, GET, POST, PUT')
+        resp.status = falcon.HTTP_200
 
+    def _add_cors(self, response):
+        response.set_header('Access-Control-Allow-Origin', '*')
+        response.set_header('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin')
+        response.set_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 
