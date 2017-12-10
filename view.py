@@ -36,6 +36,8 @@ class ViewResource(object):
                 # get by filters
                 sort = req.get_param('sort', default=None)
                 desc = req.get_param('desc', default=False)
+                if desc != False:
+                    desc = True
                 limit = req.get_param('limit', default=None)
                 if limit is not None:
                     limit = int(limit)
@@ -58,7 +60,7 @@ class ViewResource(object):
             resp.status = falcon.HTTP_404
             resp.media = standard_response(status='ERROR', message=e.msg)
         except Exception as e:
-            if issubclass(e, falcon.HTTPError):
+            if isinstance(e, falcon.HTTPError):
                 resp.status = e.status
                 resp.media = standard_response(status='ERROR', message=e.description)
             else:
@@ -98,7 +100,7 @@ class ViewResource(object):
             resp.status = falcon.HTTP_400
             resp.media = standard_response(status='ERROR', message='Must specify id in query params')
         except Exception as e:
-            if issubclass(e, falcon.HTTPError):
+            if isinstance(e, falcon.HTTPError):
                 resp.status = e.status
                 resp.media = standard_response(status='ERROR', message=e.description)
             else:
@@ -121,7 +123,7 @@ class ViewResource(object):
             resp.status = falcon.HTTP_400
             resp.media = standard_response(status='ERROR', message='Must specify id in query params')
         except Exception as e:
-            if issubclass(e, falcon.HTTPError):
+            if isinstance(e, falcon.HTTPError):
                 resp.status = e.status
                 resp.media = standard_response(status='ERROR', message=e.description)
             else:
